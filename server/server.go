@@ -12,6 +12,7 @@ const (
 	DBFile = "/data/cyan.db"
 )
 
+// Set adds a key value pair to a database
 func Set(key string, val string) string {
 	rawFileContents, _ := ioutil.ReadFile(DBFile)
 	out := []byte(fmt.Sprintf("%s%d%s%d%s;", string(rawFileContents),len(key), key, len(val), val))
