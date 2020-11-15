@@ -1,5 +1,7 @@
 # CyanDB
 
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/SatvikR/cyan-db)](https://pkg.go.dev/github.com/SatvikR/cyan-db)
+
 ## What is this
 
 A simple key-value database written in go

@@ -15,8 +15,4 @@ func main() {
 	}
 
 	fmt.Println(key)
-
-/*	fmt.Println(server.Set("username", "kevin"))
-	fmt.Println(server.Set("password", "kevins_password"))
-	fmt.Println(server.Set("likes", "100"))
-*/}
+}
