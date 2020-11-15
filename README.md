@@ -1,6 +1,6 @@
 # CyanDB
 
-[![PkgGoDev](https://pkg.go.dev/badge/github.com/SatvikR/cyan-db)](https://pkg.go.dev/github.com/SatvikR/cyan-db)
+[![PkgGoDev](https://pkg.go.dev/badge/github.com/SatvikR/cyandb)](https://pkg.go.dev/github.com/SatvikR/cyandb)
 
 ## What is this
 
