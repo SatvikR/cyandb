@@ -1,18 +1,8 @@
 package main
 
-import (
-	"fmt"
-	"github.com/SatvikR/cyandb/server"
-	"log"
-)
-
 func main() {
-	key, err := server.Get("password")
+	/*	DB := server.CreateServer(server.DefaultDBPath)
 
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-
-	fmt.Println(key)
+		DB.Set("some_data", "This is a very, very, very long string")
+	*/
 }
