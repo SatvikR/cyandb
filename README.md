@@ -13,8 +13,8 @@ This project is in early stages of development and should not be used in product
 ## TODO
 
 - [x] Rewrite serialization
-- [ ] Make Get command rewrite existing key
-- [ ] Rewrite Set command
+- [ ] Make Set command rewrite existing key
+- [ ] Rewrite Get command
 - [ ] Add error handling
 - [ ] Add websocket functionality to server
 - [ ] Create the client
