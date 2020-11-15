@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/SatvikR/cyan-db/server"
+	"github.com/SatvikR/cyandb/server"
 	"log"
 )
 
