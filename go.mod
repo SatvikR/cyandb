@@ -1,3 +1,3 @@
-module github.com/SatvikR/cyan-db
+module github.com/SatvikR/cyandb
 
 go 1.15
