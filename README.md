@@ -23,7 +23,7 @@ This project is in early stages of development and should not be used in product
 
 ## LICENSE
 
-[MIT](https://github.com/SatvikR/cyandb/blob/master/LICENSE)
+[Apache 2.0](https://github.com/SatvikR/cyandb/blob/master/LICENSE)
 
 ## FAQ
 
