@@ -14,6 +14,7 @@
 //    limitations under the License.
 //
 
+// This is the server portion of cyandb
 package server
 
 import "os"

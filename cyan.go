@@ -17,5 +17,4 @@
 package main
 
 func main() {
-	// Create db with server.CreateServer(server.DefaultDBPath)
 }

@@ -1,4 +1,6 @@
 *.exe
 bin
 
+test.dat
+
 .idea
