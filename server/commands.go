@@ -17,15 +17,18 @@
 package server
 
 import (
-	"errors"
-	"io/ioutil"
+	"encoding/binary"
 	"log"
 	"os"
-	"strconv"
+)
+
+const (
+	filePermissions = 0644
 )
 
 // Set adds a key value pair to a database
-// Serialization schema:
+// Serialization model:
+//
 // [4 bytes len(key)][4 bytes len(val)][len(key) bytes key][len(val) bytes val]
 func (server *Server) Set(key string, val string) string {
 	// Get lengths of key and value as unsigned 32 bit integers
@@ -40,7 +43,7 @@ func (server *Server) Set(key string, val string) string {
 	// Chaining appends to append more than two slices (This is the only way I could think to do this)
 	data := append(Uint32ToByteArr(lenKey), append(Uint32ToByteArr(lenVal), append(keyAsBytes, valAsBytes...)...)...)
 
-	f, _ := os.OpenFile(server.Location, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0664)
+	f, _ := os.OpenFile(server.Location, os.O_APPEND|os.O_CREATE|os.O_WRONLY, filePermissions)
 
 	_, err := f.Write(data)
 	if err != nil {
@@ -56,44 +59,56 @@ func (server *Server) Set(key string, val string) string {
 }
 
 // Get returns a value from the database given a corresponding key
-func Get(key string) (string, error) {
-	byteFileContents, _ := ioutil.ReadFile(DefaultDBPath)
-	// Convert file into string
-	fileContents := string(byteFileContents)
-
-	// i is the current index in the file
-	i := 0
+func (server *Server) Get(key string) (string, error) {
+	f, _ := os.OpenFile(server.Location, os.O_RDONLY|os.O_CREATE, filePermissions)
 
 	for {
-		curr := ""
-
-		// Get current key/value string into curr
-		currentSlice := fileContents[i:]
-		for charIndex := range currentSlice {
-			char := currentSlice[charIndex]
-			// Break here because ';' is our record separator
-			if char == ';' {
-				break
-			}
-			curr += string(char)
+		// Read 4 bytes to get current key length
+		currKeyLenAsBytes := make([]byte, 4)
+		_, err := f.Read(currKeyLenAsBytes)
+		if err != nil {
+			return "", err
 		}
 
-		// Get current key
-		keyLen, _ := strconv.ParseInt(string(curr[0]), 10, 64)
-		currKey := curr[1 : keyLen+1]
-		// Delete key from curr
-		curr = curr[keyLen+1:]
-		// Get current value
-		valueLen, _ := strconv.ParseInt(string(curr[0]), 10, 64)
-		currVal := curr[1 : valueLen+1]
-		// Return if key is found
-		if key == currKey {
-			return currVal, nil
+		// Convert length as bytes into uint32
+		currKeyLen := binary.LittleEndian.Uint32(currKeyLenAsBytes)
+
+		// Repeat previous step for value
+		currValLenAsBytes := make([]byte, 4)
+		_, err = f.Read(currValLenAsBytes)
+		if err != nil {
+			return "", err
 		}
-		// Move i along to next pair
-		i += int(keyLen) + int(valueLen) + 3 // 3 represents three characters :, ;, and the first char in the next pair
-		if i >= len(fileContents) {
-			return "", errors.New("key not found")
+
+		currValLen := binary.LittleEndian.Uint32(currValLenAsBytes)
+
+		// Read key using key len from above
+		currKeyAsBytes := make([]byte, currKeyLen)
+		_, err = f.Read(currKeyAsBytes)
+		if err != nil {
+			return "", err
 		}
+
+		// Convert bytes to string
+		currKey := string(currKeyAsBytes)
+
+		// Repeat previous step for value
+		currValAsBytes := make([]byte, currValLen)
+		_, err = f.Read(currValAsBytes)
+		if err != nil {
+			return "", err
+		}
+
+		// We can continue here if the target key and
+		// current key do not match because our file pointer is
+		// already at the correct position
+		if key != currKey {
+			continue
+		}
+
+		// Now it is ok to read the value
+		currVal := string(currValAsBytes)
+
+		return currVal, nil
 	}
 }
