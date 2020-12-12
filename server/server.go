@@ -17,7 +17,9 @@
 // This is the server portion of cyandb
 package server
 
-import "os"
+import (
+	"os"
+)
 
 const (
 	// Use this for default db functionality
@@ -40,7 +42,8 @@ func CreateServer(path string) *Server {
 
 	// Create db directory if doesn't exist
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		_ = os.Mkdir(path, 0777)
+		err = os.MkdirAll(path, 0777)
+		// log.Fatal(err)
 	}
 
 	server := &Server{Location: path + dataFileName}

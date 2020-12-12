@@ -39,83 +39,9 @@ func (server *Server) Set(key string, val string) (string, error) {
 	keyAsBytes := []byte(key)
 	valAsBytes := []byte(val)
 
-	oldVal, _, existingPos := server.Get(key)
+	_, _, existingPos := server.Get(key)
 	if existingPos != 0 {
-		tempFile, err := os.OpenFile(server.Location+".temp", os.O_CREATE|os.O_WRONLY, filePermissions)
 
-		if err != nil {
-			return "", err
-		}
-		originalFile, err := os.OpenFile(server.Location, os.O_CREATE|os.O_RDWR, filePermissions)
-
-		if err != nil {
-			return "", err
-		}
-
-		tempBuffer := make([]byte, existingPos)
-		_, err = originalFile.Read(tempBuffer)
-		if err != nil {
-			return "", err
-		}
-
-		tempBuffer = tempBuffer[:0]
-
-		_, err = tempFile.Write(tempBuffer)
-		if err != nil {
-			return "", err
-		}
-
-		currentPos, err := originalFile.Seek(int64(len(oldVal)), io.SeekCurrent)
-		if err != nil {
-			return "", err
-		}
-
-		EOF, err := originalFile.Seek(0, io.SeekEnd)
-		if err != nil {
-			return "", err
-		}
-		_, err = originalFile.Seek(currentPos, io.SeekStart)
-		if err != nil {
-			return "", err
-		}
-
-		restOFBuffer := make([]byte, EOF-currentPos)
-		_, err = originalFile.Read(restOFBuffer)
-		if err != nil {
-			return "", err
-		}
-
-		newValBuffer := []byte(val)
-		_, err = tempFile.Write(newValBuffer)
-		if err != nil {
-			return "", err
-		}
-
-		_, err = tempFile.Write(restOFBuffer)
-		if err != nil {
-			return "", err
-		}
-
-		err = tempFile.Close()
-		if err != nil {
-			return "", err
-		}
-
-		err = originalFile.Close()
-		if err != nil {
-			return "", err
-		}
-
-		err = os.Remove(originalFile.Name())
-		if err != nil {
-			return "", err
-		}
-		err = os.Rename(tempFile.Name(), server.Location)
-		if err != nil {
-			return "", err
-		}
-
-		return val, nil
 	}
 
 	// Append all bytes into one slice

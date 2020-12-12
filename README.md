@@ -11,6 +11,13 @@ and is not an in-memory database.
 
 This project is in early stages of development and should not be used in production
 
+## To run:
+- Server:
+  - Windows:
+    `go run cyan.go`
+  - Linux:
+    `sudo go run cyan.go`
+
 ## TODO
 
 - [x] Rewrite serialization
