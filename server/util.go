@@ -30,3 +30,11 @@ func Uint32ToByteArr(num uint32) []byte {
 
 	return bytes
 }
+
+func Reverse(nums []int64) []int64 {
+	for i := 0; i < len(nums); i++ {
+		j := len(nums) - i - 1
+		nums[i], nums[j] = nums[j], nums[i]
+	}
+	return nums
+}

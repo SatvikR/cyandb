@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	testDBLocation = "./test.dat"
+	testDBLocation = "../test.dat"
 )
 
 func TestServer_Set(t *testing.T) {
@@ -62,7 +62,7 @@ func TestServer_Set(t *testing.T) {
 			server := &Server{
 				Location: tt.fields.Location,
 			}
-			if got := server.Set(tt.args.key, tt.args.val); got != tt.want {
+			if got, _ := server.Set(tt.args.key, tt.args.val); got != tt.want {
 				t.Errorf("Set() = %v, want %v", got, tt.want)
 			}
 		})
@@ -110,7 +110,7 @@ func TestServer_Get(t *testing.T) {
 			server := &Server{
 				Location: tt.fields.Location,
 			}
-			got, err := server.Get(tt.args.key)
+			got, err, _ := server.Get(tt.args.key)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Get() error = %v, wantErr %v", err, tt.wantErr)
 				return
