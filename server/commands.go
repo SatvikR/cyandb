@@ -39,9 +39,38 @@ func (server *Server) Set(key string, val string) (string, error) {
 	keyAsBytes := []byte(key)
 	valAsBytes := []byte(val)
 
-	_, _, existingPos := server.Get(key)
+	originalValue, _, existingPos := server.Get(key)
 	if existingPos != 0 {
+		f, err := os.OpenFile(server.Location, os.O_APPEND|os.O_RDWR, filePermissions)
 
+		if err != nil {
+			return "", err
+		}
+
+		_, err = f.Seek(existingPos, io.SeekStart)
+
+		endOfOriginalVal, err := f.Seek(int64(len(originalValue)), io.SeekCurrent)
+
+		eof, err := f.Seek(0, io.SeekEnd)
+
+		_, err = f.Seek(endOfOriginalVal, io.SeekStart)
+
+		endBuffer := make([]byte, eof-endOfOriginalVal)
+
+		_, err = f.Read(endBuffer)
+
+		_, err = f.Seek(existingPos, io.SeekStart)
+
+		err = f.Truncate(existingPos)
+
+		_, err = f.Write(valAsBytes)
+		_, err = f.Write(endBuffer)
+
+		if err = f.Close(); err != nil {
+			return "", err
+		}
+
+		return val, err
 	}
 
 	// Append all bytes into one slice
