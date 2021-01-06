@@ -39,6 +39,7 @@ func (server *Server) Set(key string, val string) (string, error) {
 	keyAsBytes := []byte(key)
 	valAsBytes := []byte(val)
 
+	// Key already exists
 	originalValue, _, existingPos := server.Get(key)
 	if existingPos != 0 {
 		f, err := os.OpenFile(server.Location, os.O_APPEND|os.O_RDWR, filePermissions)
@@ -47,22 +48,35 @@ func (server *Server) Set(key string, val string) (string, error) {
 			return "", err
 		}
 
+		// Seek to end of original key
 		_, err = f.Seek(existingPos, io.SeekStart)
 
+		// Seek to end of original value
 		endOfOriginalVal, err := f.Seek(int64(len(originalValue)), io.SeekCurrent)
 
+		// Find EOF value (len of file)
 		eof, err := f.Seek(0, io.SeekEnd)
 
+		// Seek back to where we were before
 		_, err = f.Seek(endOfOriginalVal, io.SeekStart)
 
 		endBuffer := make([]byte, eof-endOfOriginalVal)
 
+		// Read rest of file into a buffer
 		_, err = f.Read(endBuffer)
 
 		_, err = f.Seek(existingPos, io.SeekStart)
 
-		err = f.Truncate(existingPos)
+		// Go to 4 bytes behind the original key (4 bytes is the length in bytes of the length of the keys/values,
+		// see line 32
+		err = f.Truncate(existingPos - int64(lenKey) - 4)
 
+		_, err = f.Seek(0, io.SeekEnd)
+
+		// Write new length of value and original key
+		_, err = f.Write(append(Uint32ToByteArr(lenVal), keyAsBytes...))
+
+		// Write the new value and the buffer of the rest of the file
 		_, err = f.Write(valAsBytes)
 		_, err = f.Write(endBuffer)
 

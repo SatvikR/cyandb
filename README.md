@@ -23,8 +23,8 @@ This project is in early stages of development and should not be used in product
 - [x] Rewrite serialization
 - [x] Rewrite Get command
 - [x] Make Set command rewrite existing key
-- [ ] Fix Get command not finding last key if the key is the last key in the file.
-- [ ] Add error handling
+- [x] Fix Get command not finding last key if the key is the last key in the file.
+- [x] Add error handling
 - [ ] Add websocket functionality to server
 - [ ] Create the client
 - [ ] Create CLI to start program, e.g. `cyan run server` and `cyan run shell`

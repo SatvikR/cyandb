@@ -17,6 +17,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/SatvikR/cyandb/server"
 	"log"
 )
@@ -28,9 +29,15 @@ func main() {
 		_, _ = db.Set("chess", "is cool")
 		_, _ = db.Set("chocolate", "cake")
 	*/
-
-	if _, err := db.Set("chocolate", "cake!"); err != nil {
+	/*	if _, err := db.Set("chocolate", "is really good"); err != nil {
+			log.Fatal(err)
+		}
+	*/
+	a, err, _ := db.Get("chocolate")
+	if err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println(a)
 
 }
