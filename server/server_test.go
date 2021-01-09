@@ -56,12 +56,21 @@ func TestServer_Set(t *testing.T) {
 			},
 			want: "ValueLongerThanNineCharacters",
 		},
+		{
+			name:   "re-writing same key",
+			fields: fields{Location: testDBLocation},
+			args: args{
+				key: "hello",
+				val: "new world",
+			},
+			want: "new world",
+		},
+	}
+	server := &Server{
+		Location: testDBLocation,
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			server := &Server{
-				Location: tt.fields.Location,
-			}
 			if got, _ := server.Set(tt.args.key, tt.args.val); got != tt.want {
 				t.Errorf("Set() = %v, want %v", got, tt.want)
 			}
@@ -87,7 +96,7 @@ func TestServer_Get(t *testing.T) {
 			name:    "hello world",
 			fields:  fields{Location: testDBLocation},
 			args:    args{key: "hello"},
-			want:    "world",
+			want:    "new world",
 			wantErr: false,
 		},
 		{
@@ -105,11 +114,11 @@ func TestServer_Get(t *testing.T) {
 			wantErr: true,
 		},
 	}
+	server := &Server{
+		Location: testDBLocation,
+	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			server := &Server{
-				Location: tt.fields.Location,
-			}
 			got, err, _ := server.Get(tt.args.key)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("Get() error = %v, wantErr %v", err, tt.wantErr)

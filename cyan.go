@@ -16,28 +16,10 @@
 
 package main
 
-import (
-	"fmt"
-	"github.com/SatvikR/cyandb/server"
-	"log"
-)
+import "github.com/SatvikR/cyandb/server"
 
 func main() {
-	db := server.CreateServer(server.DefaultDBPath)
+	db := server.CreateServer(server.DefaultDBPath, server.DefaultPort)
 
-	/*	_, _ = db.Set("hello", "world")
-		_, _ = db.Set("chess", "is cool")
-		_, _ = db.Set("chocolate", "cake")
-	*/
-	/*	if _, err := db.Set("chocolate", "is really good"); err != nil {
-			log.Fatal(err)
-		}
-	*/
-	a, err, _ := db.Get("chocolate")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println(a)
-
+	db.StartServer()
 }

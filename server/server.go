@@ -24,6 +24,7 @@ import (
 const (
 	// Use this for default db functionality
 	DefaultDBPath = "/data/cyan/"
+	DefaultPort   = 8080
 	dataFileName  = "db.dat"
 )
 
@@ -31,10 +32,11 @@ const (
 // I will add more to this once websockets are introduced
 type Server struct {
 	Location string
+	Port     int
 }
 
 // CreateServer creates a server struct
-func CreateServer(path string) *Server {
+func CreateServer(path string, port int) *Server {
 	// Make sure path ends in '/'
 	if path[len(path)-1:] != "/" {
 		path = path + "/"
@@ -46,7 +48,7 @@ func CreateServer(path string) *Server {
 		// log.Fatal(err)
 	}
 
-	server := &Server{Location: path + dataFileName}
+	server := &Server{Location: path + dataFileName, Port: port}
 
 	return server
 }
