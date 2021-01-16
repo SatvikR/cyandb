@@ -29,7 +29,7 @@ var upgrader = websocket.Upgrader{
 	CheckOrigin:     func(r *http.Request) bool { return true },
 }
 
-func homePage(w http.ResponseWriter, r *http.Request) {
+func homePage(w http.ResponseWriter, _ *http.Request) {
 	if _, err := fmt.Fprintf(w, "Welcome to CyanDB"); err != nil {
 		log.Fatal(err)
 	}
@@ -37,7 +37,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 
 func reader(conn *websocket.Conn) {
 	for {
-		messageType, p, err := conn.ReadMessage()
+		_, p, err := conn.ReadMessage()
 		if err != nil {
 			log.Println(err)
 			return
@@ -45,7 +45,7 @@ func reader(conn *websocket.Conn) {
 
 		log.Println(string(p))
 
-		if err := conn.WriteMessage(messageType, []byte(fmt.Sprintf("Why would you say %s", string(p)))); err != nil {
+		if err := conn.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf("Cool, you said %s", string(p)))); err != nil {
 			log.Println(err)
 			return
 		}

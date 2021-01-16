@@ -16,10 +16,51 @@
 
 package main
 
-import "github.com/SatvikR/cyandb/server"
+import (
+	"fmt"
+	"github.com/SatvikR/cyandb/client"
+	"github.com/SatvikR/cyandb/server"
+	"os"
+)
 
 func main() {
-	db := server.CreateServer(server.DefaultDBPath, server.DefaultPort)
+	args := os.Args[1:]
 
-	db.StartServer()
+	if len(args) < 1 {
+		fmt.Println("Missing arguments. Try `cyan help`")
+		os.Exit(1)
+	}
+
+	if args[0] == "help" {
+		fmt.Println("Usage:\n" +
+			"	cyan [command] [options]\n" +
+			"Commands: \n" +
+			"	help		Prints this message\n" +
+			"	start		Starts requested application\n" +
+			"		Applications: \n" +
+			"			client		CyanDB Client\n" +
+			"			server 		CyanDB Server\n" +
+			"		ex. `cyan start client`")
+		os.Exit(1)
+	}
+
+	if args[0] == "start" {
+		if len(args) < 2 {
+			fmt.Println("Missing arguments. Try `cyan help`")
+			os.Exit(1)
+		}
+
+		if args[1] == "client" {
+			dbClient := client.CreateClient(client.DefaultAddr)
+			dbClient.StartClient()
+			os.Exit(1)
+		} else if args[1] == "server" {
+			db := server.CreateServer(server.DefaultDBPath, server.DefaultPort)
+
+			db.StartServer()
+			os.Exit(1)
+		}
+	}
+
+	fmt.Println("Missing/Invalid arguments. Try `cyan help`")
 }
