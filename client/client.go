@@ -44,7 +44,7 @@ func CreateClient(addr string) *Client {
 
 // StartClient will be updated later
 func (client *Client) StartClient() {
-	fmt.Println("Starting client...")
+	fmt.Println("Starting client..., type `exit` to exit")
 
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, os.Interrupt)
@@ -59,11 +59,10 @@ func (client *Client) StartClient() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		if line == "exit" {
-			client.socket.Close()
-			os.Exit(1)
+		if line[:len(line)-1] == "exit" {
+			os.Exit(0)
 		}
-		client.socket.SendText(line)
+		client.socket.SendText(line[:len(line)-1])
 	}
 }
 

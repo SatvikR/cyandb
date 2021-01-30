@@ -42,49 +42,11 @@ func (server *Server) Set(key string, val string) (string, error) {
 	// Key already exists
 	originalValue, _, existingPos := server.Get(key)
 	if existingPos != 0 {
-		f, err := os.OpenFile(server.Location, os.O_APPEND|os.O_RDWR, filePermissions)
-
+		err := server.SetExisting(keyAsBytes, valAsBytes, lenKey, lenVal, originalValue, existingPos)
 		if err != nil {
 			return "", err
 		}
-
-		// Seek to end of original key
-		_, err = f.Seek(existingPos, io.SeekStart)
-
-		// Seek to end of original value
-		endOfOriginalVal, err := f.Seek(int64(len(originalValue)), io.SeekCurrent)
-
-		// Find EOF value (len of file)
-		eof, err := f.Seek(0, io.SeekEnd)
-
-		// Seek back to where we were before
-		_, err = f.Seek(endOfOriginalVal, io.SeekStart)
-
-		endBuffer := make([]byte, eof-endOfOriginalVal)
-
-		// Read rest of file into a buffer
-		_, err = f.Read(endBuffer)
-
-		_, err = f.Seek(existingPos, io.SeekStart)
-
-		// Go to 4 bytes behind the original key (4 bytes is the length in bytes of the length of the keys/values,
-		// see line 32
-		err = f.Truncate(existingPos - int64(lenKey) - 4)
-
-		_, err = f.Seek(0, io.SeekEnd)
-
-		// Write new length of value and original key
-		_, err = f.Write(append(Uint32ToByteArr(lenVal), keyAsBytes...))
-
-		// Write the new value and the buffer of the rest of the file
-		_, err = f.Write(valAsBytes)
-		_, err = f.Write(endBuffer)
-
-		if err = f.Close(); err != nil {
-			return "", err
-		}
-
-		return val, err
+		return val, nil
 	}
 
 	// Append all bytes into one slice
@@ -111,45 +73,19 @@ func (server *Server) Get(key string) (string, error, int64) {
 	f, _ := os.OpenFile(server.Location, os.O_RDONLY|os.O_CREATE, filePermissions)
 
 	for {
-		// Read 4 bytes to get current key length
-		currKeyLenAsBytes := make([]byte, 4)
-		_, err := f.Read(currKeyLenAsBytes)
+		currKeyLenAsBytes, currValLenAsBytes, err := GetAsBytes(f)
 		if err != nil {
 			return "", err, 0
 		}
 
 		// Convert length as bytes into uint32
 		currKeyLen := binary.LittleEndian.Uint32(currKeyLenAsBytes)
-
-		// Repeat previous step for value
-		currValLenAsBytes := make([]byte, 4)
-		_, err = f.Read(currValLenAsBytes)
-		if err != nil {
-			return "", err, 0
-		}
-
 		currValLen := binary.LittleEndian.Uint32(currValLenAsBytes)
 
-		// Read key using key len from above
-		currKeyAsBytes := make([]byte, currKeyLen)
-		_, err = f.Read(currKeyAsBytes)
-		if err != nil {
-			return "", err, 0
-		}
-
-		currentPos, err := f.Seek(0, io.SeekCurrent)
-		if err != nil {
-			return "", err, 0
-		}
-
-		// Convert bytes to string
-		currKey := string(currKeyAsBytes)
-
-		// Repeat previous step for value
-		currValAsBytes := make([]byte, currValLen)
-		_, err = f.Read(currValAsBytes)
-		if err != nil {
-			return "", err, 0
+		// Read the key and value
+		err, currentPos, currKey, currValAsBytes, s, err2, i, done := ReadKeyVal(currKeyLen, err, f, currValLen)
+		if done {
+			return s, err2, i
 		}
 
 		// We can continue here if the target key and
@@ -169,4 +105,29 @@ func (server *Server) Get(key string) (string, error, int64) {
 
 		return currVal, nil, currentPos
 	}
+}
+
+func ReadKeyVal(currKeyLen uint32, err error, f *os.File, currValLen uint32) (error, int64, string, []byte, string, error, int64, bool) {
+	// Read key using key len from above
+	currKeyAsBytes := make([]byte, currKeyLen)
+	_, err = f.Read(currKeyAsBytes)
+	if err != nil {
+		return nil, 0, "", nil, "", err, 0, true
+	}
+
+	currentPos, err := f.Seek(0, io.SeekCurrent)
+	if err != nil {
+		return nil, 0, "", nil, "", err, 0, true
+	}
+
+	// Convert bytes to string
+	currKey := string(currKeyAsBytes)
+
+	// Repeat previous step for value
+	currValAsBytes := make([]byte, currValLen)
+	_, err = f.Read(currValAsBytes)
+	if err != nil {
+		return nil, 0, "", nil, "", err, 0, true
+	}
+	return err, currentPos, currKey, currValAsBytes, "", nil, 0, false
 }
