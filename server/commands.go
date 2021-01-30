@@ -18,7 +18,6 @@ package server
 
 import (
 	"encoding/binary"
-	"io"
 	"os"
 )
 
@@ -105,29 +104,4 @@ func (server *Server) Get(key string) (string, error, int64) {
 
 		return currVal, nil, currentPos
 	}
-}
-
-func ReadKeyVal(currKeyLen uint32, err error, f *os.File, currValLen uint32) (error, int64, string, []byte, string, error, int64, bool) {
-	// Read key using key len from above
-	currKeyAsBytes := make([]byte, currKeyLen)
-	_, err = f.Read(currKeyAsBytes)
-	if err != nil {
-		return nil, 0, "", nil, "", err, 0, true
-	}
-
-	currentPos, err := f.Seek(0, io.SeekCurrent)
-	if err != nil {
-		return nil, 0, "", nil, "", err, 0, true
-	}
-
-	// Convert bytes to string
-	currKey := string(currKeyAsBytes)
-
-	// Repeat previous step for value
-	currValAsBytes := make([]byte, currValLen)
-	_, err = f.Read(currValAsBytes)
-	if err != nil {
-		return nil, 0, "", nil, "", err, 0, true
-	}
-	return err, currentPos, currKey, currValAsBytes, "", nil, 0, false
 }
