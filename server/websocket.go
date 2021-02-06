@@ -23,18 +23,22 @@ import (
 	"net/http"
 )
 
+var queryRunner *QueryRunner
+
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 	CheckOrigin:     func(r *http.Request) bool { return true },
 }
 
+// homePage: route for home page
 func homePage(w http.ResponseWriter, _ *http.Request) {
 	if _, err := fmt.Fprintf(w, "Welcome to CyanDB"); err != nil {
 		log.Fatal(err)
 	}
 }
 
+// reader handles the websocket messages
 func reader(conn *websocket.Conn) {
 	for {
 		_, p, err := conn.ReadMessage()
@@ -43,15 +47,16 @@ func reader(conn *websocket.Conn) {
 			return
 		}
 
-		log.Println(string(p))
+		log.Println("COMMAND RECEIVED: " + string(p))
 
-		if err := conn.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf("Cool, you said %s", string(p)))); err != nil {
+		if err := conn.WriteMessage(websocket.TextMessage, queryRunner.RunQuery(Parse(p))); err != nil {
 			log.Println(err)
 			return
 		}
 	}
 }
 
+// wsEndpoint handles websocket connections
 func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 
@@ -64,12 +69,16 @@ func wsEndpoint(w http.ResponseWriter, r *http.Request) {
 	reader(ws)
 }
 
+// setupRoutes sets up routes
 func setupRoutes() {
 	http.HandleFunc("/", homePage)
 	http.HandleFunc("/ws", wsEndpoint)
 }
 
+// StartServer starts the websocket server
 func (server *Server) StartServer() {
+	queryRunner = NewQueryRunner(server)
+
 	fmt.Println("WEBSOCKETS")
 	setupRoutes()
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", server.Port), nil))

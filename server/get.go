@@ -40,7 +40,17 @@ func GetAsBytes(f *os.File) ([]byte, []byte, error) {
 	return currKeyLenAsBytes, currValLenAsBytes, nil
 }
 
-func ReadKeyVal(currKeyLen uint32, err error, f *os.File, currValLen uint32) (error, int64, string, []byte, string, error, int64, bool) {
+// ReadKeyVal reads the key and value from the current point in the file
+func ReadKeyVal(currKeyLen uint32, err error, f *os.File, currValLen uint32) (
+	error,
+	int64,
+	string,
+	[]byte,
+	string,
+	error,
+	int64,
+	bool,
+) {
 	// Read key using key len from above
 	currKeyAsBytes := make([]byte, currKeyLen)
 	_, err = f.Read(currKeyAsBytes)
