@@ -28,9 +28,9 @@
 //
 // Create a server with the CreateServer method, ex.
 //
-//	db := server.CreateServer(server.DefaultDBPath)
+//	db := server.CreateServer(server.DefaultDBPath, server.DefaultPort)
 //
-// server.DefaultDBPath can be changed with a custom path if needed
+// server.DefaultDBPath and server.DefaultPort can be changed with a custom path if needed
 //
 // As of right now, there are two commands: Get and Set
 //
@@ -40,13 +40,24 @@
 // Set returns the value
 // ex.
 //
-//	output := db.Set("hello", "world")
+//	output, err := db.Set("hello", "world")
 //
 // Get gets a value given a key. Get returns an empty string and an io.EOF error if the key doesn't exist. In the future,
 // Keys will be stored in an index file, and values will be stored separately, so this method will be significantly
 // faster.
+// ex.
 //
+// 	output, err, _ := db.Get("hello")
+//
+// More practically, the commands will be called via a websocket client. The websockets are handled in ./server/websocket.go.
+// The websocket messages are passed into a json parser, which return a Query struct. The queries are passed into
+// a query runner which runs the command.
+// Example command:
+// 	{
+//		"command": "set",
+//      "args": ["hello", "world"]
+//  }
 // Client:
 //
-// IN PROGRESS
+// A simple terminal based websocket client. Still in progress
 package main

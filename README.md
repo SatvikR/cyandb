@@ -40,7 +40,7 @@ This project is in early stages of development and should not be used in product
 - [x] Add websocket functionality to server
 - [x] Create the client
 - [x] Create CLI to start program, e.g. `cyan run server` and `cyan run shell`
-- [ ] Create command parser on server
+- [x] Create command parser on server
 - [ ] Make client wait for response before reprinting shell
 
 ## LICENSE
