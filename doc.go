@@ -52,12 +52,8 @@
 // More practically, the commands will be called via a websocket client. The websockets are handled in ./server/websocket.go.
 // The websocket messages are passed into a json parser, which return a Query struct. The queries are passed into
 // a query runner which runs the command.
-// Example command:
-// 	{
-//		"command": "set",
-//      "args": ["hello", "world"]
-//  }
 // Client:
+//
 //
 // A simple terminal based websocket client. Still in progress
 package main
