@@ -15,7 +15,8 @@ This project is in early stages of development and should not be used in product
 
 - Windows:
   `.\make.bat`
-- Linux: `make`
+- Linux: 
+    `make`
 
 ## To run:
 
@@ -29,6 +30,12 @@ This project is in early stages of development and should not be used in product
     `.\bin\cyan.exe start client`
   - Linux:
     `sudo ./bin/cyan start client`
+
+## To clean binaries:
+- Windows:
+    `.\make.bat clean`
+- Linux:
+    `make clean`
 
 ## TODO
 
