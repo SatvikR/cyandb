@@ -33,14 +33,14 @@ func main() {
 
 	if args[0] == "help" {
 		fmt.Println("Usage:\n" +
-			"	cyan [command] [options]\n" +
+			"	cyandb [command] [options]\n" +
 			"Commands: \n" +
 			"	help		Prints this message\n" +
 			"	start		Starts requested application\n" +
 			"		Applications: \n" +
 			"			client		CyanDB Client\n" +
 			"			server 		CyanDB Server\n" +
-			"		ex. `cyan start client`")
+			"		ex. `cyandb start client`")
 		os.Exit(1)
 	}
 

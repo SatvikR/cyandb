@@ -22,6 +22,8 @@ import (
 	"os"
 )
 
+var messagePrinter *MessagePrinter
+
 func OnDisconnected(_ error, _ gowebsocket.Socket) {
 	log.Println("Disconnected from server")
 	os.Exit(1)
@@ -34,4 +36,8 @@ func OnConnected(_ gowebsocket.Socket) {
 func OnConnectError(err error, _ gowebsocket.Socket) {
 	log.Println("Received error: ", err)
 	os.Exit(1)
+}
+
+func OnTextMessage(message string, _ gowebsocket.Socket) {
+	messagePrinter.Messages <- message
 }

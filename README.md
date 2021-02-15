@@ -11,31 +11,28 @@ and is not an in-memory database.
 
 This project is in early stages of development and should not be used in production
 
-## To compile:
+## To install:
+
+- All platforms: `go get github.com/SatvikR/cyandb`
+
+> To run the server on linux/mac, you need to run with sudo perms:
+> `sudo cyandb start server`
+
+
+## To compile for development:
 
 - Windows:
   `.\make.bat`
 - Linux: 
     `make`
 
-## To run:
-
-- Server:
-  - Windows:
-    `.\bin\cyan.exe start server`
-  - Linux:
-    `sudo ./bin/cyan start server`
-- Client:
-  - Windows:
-    `.\bin\cyan.exe start client`
-  - Linux:
-    `sudo ./bin/cyan start client`
+Binaries will show up in `./bin` folder 
 
 ## To clean binaries:
 - Windows:
-    `.\make.bat clean`
+  `.\make.bat clean`
 - Linux:
-    `make clean`
+  `make clean`
 
 ## TODO
 
@@ -48,7 +45,7 @@ This project is in early stages of development and should not be used in product
 - [x] Create the client
 - [x] Create CLI to start program, e.g. `cyan run server` and `cyan run shell`
 - [x] Create command parser on server
-- [ ] Make client wait for response before reprinting shell
+- [x] Make client wait for response before reprinting shell
 
 ## LICENSE
 
