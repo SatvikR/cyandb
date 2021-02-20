@@ -18,6 +18,16 @@ This project is in early stages of development and should not be used in product
 > To run the server on linux/mac, you need to run with sudo perms:
 > `sudo cyandb start server`
 
+## Linux Issues:
+
+Since the server requires root access, if your `GOBIN` directory, typically `/home/yourname/go/bin` is not a part of the
+`secure_path` option in `/etc/sudoers`, the command: `sudo cyandb start server` will return an error. To work around this, you can run this:
+
+```bash
+sudo cp $(which cyandb) /usr/bin
+```
+
+
 
 ## To compile for development:
 

@@ -27,7 +27,7 @@ func main() {
 	args := os.Args[1:]
 
 	if len(args) < 1 {
-		fmt.Println("Missing arguments. Try `cyan help`")
+		fmt.Println("Missing arguments. Try `cyandb help`")
 		os.Exit(1)
 	}
 

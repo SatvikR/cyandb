@@ -79,7 +79,7 @@ func setupRoutes() {
 func (server *Server) StartServer() {
 	queryRunner = NewQueryRunner(server)
 
-	fmt.Println("WEBSOCKETS")
+	fmt.Println("CyanDB listening on port " + server.Port)
 	setupRoutes()
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", server.Port), nil))
 }
