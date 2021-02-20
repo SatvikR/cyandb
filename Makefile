@@ -8,3 +8,7 @@ build:
 
 clean:
 	rm -rf $(BIN)
+
+install:
+	$(GO) install
+	sudo cp $$(which cyandb) /usr/bin/cyandb

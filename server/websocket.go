@@ -21,6 +21,7 @@ import (
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 var queryRunner *QueryRunner
@@ -79,7 +80,7 @@ func setupRoutes() {
 func (server *Server) StartServer() {
 	queryRunner = NewQueryRunner(server)
 
-	fmt.Println("CyanDB listening on port " + server.Port)
+	fmt.Println("CyanDB listening on port " + strconv.Itoa(server.Port))
 	setupRoutes()
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", server.Port), nil))
 }
