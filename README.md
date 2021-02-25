@@ -18,17 +18,17 @@ This project is in early stages of development and should not be used in product
 > To run the server on linux/mac, you need to run with sudo perms:
 > `sudo cyandb start server`
 
-
 ## To compile for development:
 
 - Windows:
   `.\make.bat`
-- Linux: 
-    `make`
+- Linux:
+  `make`
 
-Binaries will show up in `./bin` folder 
+Binaries will show up in `./bin` folder
 
 ## To clean binaries:
+
 - Windows:
   `.\make.bat clean`
 - Linux:

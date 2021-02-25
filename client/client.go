@@ -17,10 +17,8 @@
 package client
 
 import (
-	"bufio"
 	"fmt"
 	"github.com/sacOO7/gowebsocket"
-	"log"
 	"os"
 	"os/signal"
 )
@@ -55,23 +53,17 @@ func (client *Client) StartClient() {
 
 	client.Socket.Connect()
 
-	reader := bufio.NewReader(os.Stdin)
-
 	for {
-		fmt.Printf("[%s]> ", DefaultAddr)
-		line, err := reader.ReadString('\n')
+		line, err := GetJsonInput(fmt.Sprintf("%s", DefaultAddr), "...")
 		if err != nil {
-			log.Fatal(err)
-		}
-		if len(line) > 4 {
-			if line[:len(line)-1] == "exit" || line[:len(line)-2] == "exit" {
-				os.Exit(0)
-			}
-		}
-		client.Socket.SendText(line[:len(line)-1])
+			fmt.Printf("Error: %s", err)
+		} else {
+			client.Socket.SendText(line[:len(line)-1])
 
-		res := <-messagePrinter.Messages
-		fmt.Println(res)
+			res := <-messagePrinter.Messages
+			fmt.Println(res)
+		}
+
 	}
 }
 
