@@ -18,42 +18,31 @@
 //
 // Server:
 //
-// Import server with the "github.com/SatvikR/cyandb/server" package
+// Once installed, use the `cyand` command to run.
 //
-// The keys and values must have 32 bit lengths. There are plans to make keys a
-// maximum of 16 bits, because no one practically uses very large keys
-//
-// The server struct is a container for all of the server specific data
-// that includes the storage location and websocket info
-//
-// Create a server with the CreateServer method, ex.
-//
-//	db := server.CreateServer(server.DefaultDBPath, server.DefaultPort)
-//
-// server.DefaultDBPath and server.DefaultPort can be changed with a custom path if needed
-//
-// As of right now, there are two commands: Get and Set
-//
-// Set creates a key value pair. The data is serialized like so:
-// 4 bytes for len(key), 4 bytes for len(val), len(key) bytes for key, len(val) bytes for val.
-// Right now, if a duplicate key exists, it creates the new pair anyway, and ergo, the new pair will be ignored.
-// Set returns the value
-// ex.
-//
-//	output, err := db.Set("hello", "world")
-//
-// Get gets a value given a key. Get returns an empty string and an io.EOF error if the key doesn't exist. In the future,
-// Keys will be stored in an index file, and values will be stored separately, so this method will be significantly
-// faster.
-// ex.
-//
-// 	output, err, _ := db.Get("hello")
-//
-// More practically, the commands will be called via a websocket client. The websockets are handled in ./server/websocket.go.
-// The websocket messages are passed into a json parser, which return a Query struct. The queries are passed into
-// a query runner which runs the command.
 // Client:
 //
+// Once installed, use the `cyansh` command to run
 //
-// A simple terminal based websocket client. Still in progress
+// Syntax:
+// Cyandb uses a JSON syntax. As of now, there are two commands, set and get.
+//
+// Set:
+// args: key, value
+// ex.
+//
+// 	{
+// 		"command": "set",
+// 		"args": ["hello", "world"]
+// 	}
+//
+// Get:
+// args: key
+// ex.
+//
+// 	{
+//		"command": "get",
+//		"args": ["hello"]
+//	}
+//
 package main
