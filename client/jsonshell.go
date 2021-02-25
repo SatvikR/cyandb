@@ -23,6 +23,12 @@ import (
 	"os"
 )
 
+const (
+	singleQuote = iota
+	doubleQuote = iota
+	noQuote     = iota
+)
+
 type Stack struct {
 	Data []rune
 }
@@ -49,6 +55,7 @@ func GetJsonInput(promptOne string, promptTwo string) (string, error) {
 	jsonStack := &Stack{Data: make([]rune, 0)}
 
 	inString := false
+	quoteType := noQuote
 
 	currentInput := ""
 
@@ -72,8 +79,22 @@ func GetJsonInput(promptOne string, promptTwo string) (string, error) {
 		currentInput += line
 
 		for _, char := range line {
-			if char == '"' {
-				inString = !inString
+			if char == '"' || char == '\'' {
+				if char == '"' {
+					if inString && (quoteType == doubleQuote) {
+						inString = !inString
+					} else if !inString {
+						inString = !inString
+						quoteType = doubleQuote
+					}
+				} else {
+					if inString && (quoteType == singleQuote) {
+						inString = !inString
+					} else if !inString {
+						inString = !inString
+						quoteType = singleQuote
+					}
+				}
 			} else if !inString {
 				if char == '(' || char == '{' || char == '[' {
 					jsonStack.push(char)

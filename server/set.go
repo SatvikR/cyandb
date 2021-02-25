@@ -43,16 +43,16 @@ func (server *Server) SetExisting(keyAsBytes []byte, valAsBytes []byte, lenKey u
 		return err
 	}
 
-	err = replaceEndBuffer(f, existingPos, keyAsBytes, valAsBytes, endBuffer, lenKey, lenVal)
+	err = server.replaceEndBuffer(f, existingPos, keyAsBytes, valAsBytes, endBuffer, lenKey, lenVal)
 	if err != nil {
 		_ = f.Close()
 		return err
 	}
 
-	if err = f.Close(); err != nil {
-		return err
-	}
-
+	/*	if err = f.Close(); err != nil {
+			return err
+		}
+	*/
 	return err
 }
 
@@ -94,31 +94,41 @@ func getEndBuffer(f *os.File, originalValue string, existingPos int64) ([]byte, 
 }
 
 // replaceEndBuffer replaces the endBuffer with the new key and value
-func replaceEndBuffer(f *os.File, existingPos int64, keyAsBytes []byte, valAsBytes []byte, endBuffer []byte, lenKey uint32, lenVal uint32) error {
+func (server *Server) replaceEndBuffer(f *os.File, existingPos int64, keyAsBytes []byte, valAsBytes []byte, endBuffer []byte, lenKey uint32, lenVal uint32) error {
 	// Go to 4 bytes behind the original key (4 bytes is the length in bytes of the length of the keys/values,
 	// see line 32
-	err := f.Truncate(existingPos - int64(lenKey) - 4)
+	err := f.Close()
+	if err != nil {
+		return err
+	}
+	err = os.Truncate(server.Location, existingPos-int64(lenKey)-4)
 	if err != nil {
 		return err
 	}
 
-	_, err = f.Seek(0, io.SeekEnd)
+	// Don't ask, windows is unbelievable stupid
+	f2, err := os.OpenFile(server.Location, os.O_APPEND|os.O_RDWR, filePermissions)
+	if err != nil {
+		return err
+	}
+
+	_, err = f2.Seek(0, io.SeekEnd)
 	if err != nil {
 		return err
 	}
 
 	// Write new length of value and original key
-	_, err = f.Write(append(Uint32ToByteArr(lenVal), keyAsBytes...))
+	_, err = f2.Write(append(Uint32ToByteArr(lenVal), keyAsBytes...))
 	if err != nil {
 		return err
 	}
 
 	// Write the new value and the buffer of the rest of the file
-	_, err = f.Write(valAsBytes)
+	_, err = f2.Write(valAsBytes)
 	if err != nil {
 		return err
 	}
-	_, err = f.Write(endBuffer)
+	_, err = f2.Write(endBuffer)
 	if err != nil {
 		return err
 	}

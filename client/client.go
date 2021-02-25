@@ -54,7 +54,7 @@ func (client *Client) StartClient() {
 	client.Socket.Connect()
 
 	for {
-		line, err := GetJsonInput(fmt.Sprintf("%s", DefaultAddr), "...")
+		line, err := GetJsonInput(fmt.Sprintf("%s>", DefaultAddr), "...")
 		if err != nil {
 			fmt.Printf("Error: %s", err)
 		} else {
