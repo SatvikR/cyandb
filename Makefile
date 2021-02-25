@@ -2,13 +2,14 @@ GO=go
 BIN=./bin
 ARGS=-i
 
-# Only to be used in development
 build:
-	$(GO) build $(ARGS) -o $(BIN)/cyandb cyan.go
+    $(GO) build $(ARGS) ./cmd/cyand/main.go -o $(BIN)/cyand
+    $(GO) build $(ARGS) ./cmd/cyansh/main.go -o $(BIN)/cyansh
 
 clean:
 	rm -rf $(BIN)
 
 install:
-	$(GO) install
+	$(GO) install $(ARGS) ./cmd/cyand
+	$(GO) install $(ARGS) ./cmd/cyansh
 	sudo cp $$(which cyandb) /usr/bin/cyandb

@@ -13,32 +13,42 @@ This project is in early stages of development and should not be used in product
 
 ## To install:
 
-- All platforms: `go get github.com/SatvikR/cyandb`
+For all platforms: Make sure that your `GOBIN` directory, typically `~/go/bin/` is in your `PATH`
 
-### Alternative for Linux:
-
-- To avoid any problems with sudo access, you can download the codebase, and run `make install`
-
-> To run the server on linux/mac, you need to run with sudo perms:
-> `sudo cyandb start server`
-
-## Linux Issues:
-
-> This issue is automatically fixed if installed using `make install`
-
-Since the server requires root access, if your `GOBIN` directory, typically `/home/yourname/go/bin` is not a part of the
-`secure_path` option in `/etc/sudoers`, the command: `sudo cyandb start server` will return an error. To work around this, you can run this:
+- Windows:
 
 ```bash
-sudo cp $(which cyandb) /usr/bin
+go get github.com/SatvikR/cyandb/cmd/cyand
+go get github.com/SatvikR/cyandb/cmd/cyansh
 ```
 
+- Linux/Mac:
+
+```bash
+go get github.com/SatvikR/cyandb/cmd/cyand
+go get github.com/SatvikR/cyandb/cmd/cyansh
+
+sudo cp $(which cyand) /usr/bin
+```
+
+## To compile from source:
+
+From the root of the repository, run the following:
+
+- Windows:
+  `.\make.bat install`
+  
+- Linux:
+  `make install`
 
 
 ## To compile for development:
 
+From the root of the repository, run the following:
+
 - Windows:
   `.\make.bat`
+
 - Linux:
   `make`
 
@@ -49,19 +59,6 @@ Binaries will show up in `./bin` folder
   `.\make.bat clean`
 - Linux:
   `make clean`
-
-## TODO
-
-- [x] Rewrite serialization
-- [x] Rewrite Get command
-- [x] Make Set command rewrite existing key
-- [x] Fix Get command not finding last key if the key is the last key in the file.
-- [x] Add error handling
-- [x] Add websocket functionality to server
-- [x] Create the client
-- [x] Create CLI to start program, e.g. `cyan run server` and `cyan run shell`
-- [x] Create command parser on server
-- [x] Make client wait for response before reprinting shell
 
 ## LICENSE
 
