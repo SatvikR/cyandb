@@ -15,8 +15,25 @@ This project is in early stages of development and should not be used in product
 
 - All platforms: `go get github.com/SatvikR/cyandb`
 
+### Alternative for Linux:
+
+- To avoid any problems with sudo access, you can download the codebase, and run `make install`
+
 > To run the server on linux/mac, you need to run with sudo perms:
 > `sudo cyandb start server`
+
+## Linux Issues:
+
+> This issue is automatically fixed if installed using `make install`
+
+Since the server requires root access, if your `GOBIN` directory, typically `/home/yourname/go/bin` is not a part of the
+`secure_path` option in `/etc/sudoers`, the command: `sudo cyandb start server` will return an error. To work around this, you can run this:
+
+```bash
+sudo cp $(which cyandb) /usr/bin
+```
+
+
 
 ## To compile for development:
 
@@ -28,7 +45,6 @@ This project is in early stages of development and should not be used in product
 Binaries will show up in `./bin` folder
 
 ## To clean binaries:
-
 - Windows:
   `.\make.bat clean`
 - Linux:
@@ -56,3 +72,4 @@ Binaries will show up in `./bin` folder
 - Where does the name CyanDB come from?
   - I was originally going to call this project BlueDB, but apparently that already existed.
     When I asked one of my friends, [Alexandre2006](https://github.com/Alexandre2006), "What should I rename BlueDB to?", he replied "CyanDB."
+
