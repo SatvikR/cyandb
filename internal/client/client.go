@@ -14,6 +14,7 @@
 //    limitations under the License.
 //
 
+// Internal code for the cyandb client
 package client
 
 import (

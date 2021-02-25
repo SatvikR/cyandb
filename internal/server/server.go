@@ -14,7 +14,7 @@
 //    limitations under the License.
 //
 
-// This is the server portion of cyandb
+// Internal code for the cyandb server
 package server
 
 import (
