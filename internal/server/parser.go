@@ -76,9 +76,17 @@ func (queryRunner *QueryRunner) RunQuery(err error, query *Query) []byte {
 
 		out, err := queryRunner.Server.Set(query.Args[0], query.Args[1])
 		if err != nil {
-			return []byte(fmt.Sprintf("SET %s %s; OUTPUT=%s", query.Args[0], query.Args[1], err))
+			//return []byte(fmt.Sprintf("SET %s %s; OUTPUT=%s", query.Args[0], query.Args[1], err))
+			return []byte(fmt.Sprintf("{\n"+
+				"\"set\": [\"%s\", \"%s\"],\n"+
+				"\"output\": \"%s\"\n"+
+				"}", query.Args[0], query.Args[1], err))
 		} else {
-			return []byte(fmt.Sprintf("SET %s %s; OUTPUT=%s", query.Args[0], query.Args[1], out))
+			//return []byte(fmt.Sprintf("SET %s %s; OUTPUT=%s", query.Args[0], query.Args[1], out))
+			return []byte(fmt.Sprintf("{\n"+
+				"\"set\": [\"%s\", \"%s\"],\n"+
+				"\"output\": \"%s\"\n"+
+				"}", query.Args[0], query.Args[1], out))
 		}
 	} else if query.Command == "get" {
 		bytes, done := VerifyGetQuery(query)
@@ -87,11 +95,21 @@ func (queryRunner *QueryRunner) RunQuery(err error, query *Query) []byte {
 		}
 		out, err, _ := queryRunner.Server.Get(query.Args[0])
 		if err != nil {
-			return []byte(fmt.Sprintf("GET %s; OUTPUT=%s", query.Args[0], err))
+			//return []byte(fmt.Sprintf("GET %s; OUTPUT=%s", query.Args[0], err))
+			return []byte(fmt.Sprintf("{\n"+
+				"\"get\": [\"%s\"],\n"+
+				"\"output\": \"%s\"\n"+
+				"}", query.Args[0], err))
 		} else {
-			return []byte(fmt.Sprintf("GET %s; OUTPUT=%s", query.Args[0], out))
+			//return []byte(fmt.Sprintf("GET %s; OUTPUT=%s", query.Args[0], out))
+			return []byte(fmt.Sprintf("{\n"+
+				"\"get\": [\"%s\"],\n"+
+				"\"output\": \"%s\"\n"+
+				"}", query.Args[0], out))
 		}
 	} else {
-		return []byte("Invalid command")
+		return []byte("{\n" +
+			"\"output\": \"invalid command\"\n" +
+			"}")
 	}
 }
