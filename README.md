@@ -11,6 +11,24 @@ and is not an in-memory database.
 
 This project is in early stages of development and should not be used in production
 
+## To run
+
+- Server:
+
+```bash
+# windows
+cyand 
+# On linux/mac
+sudo cyand
+```
+
+- Client
+
+```bash
+# windows/linux/mac
+cyansh
+```
+
 ## To install:
 
 For all platforms: Make sure that your `GOBIN` directory, typically `~/go/bin/` is in your `PATH`
