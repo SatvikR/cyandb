@@ -4,7 +4,7 @@
 
 ## About
 
-This is a simple key-value database written in go. CyanDB is persistent,
+This is a lightweight key-value database written in go. CyanDB is persistent,
 and is not an in-memory database.
 
 ## Project Status
