@@ -86,5 +86,5 @@ Binaries will show up in `./bin` folder
 
 - Where does the name CyanDB come from?
   - I was originally going to call this project BlueDB, but apparently that already existed.
-    When I asked one of my friends, [Alexandre2006](https://github.com/Alexandre2006), "What should I rename BlueDB to?", he replied "CyanDB."
+    When I asked one of my friends, [Alexandre](https://github.com/Alexandre2006), "What should I rename BlueDB to?", he replied "CyanDB."
 
